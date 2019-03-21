@@ -6,17 +6,37 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Fetch-API</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 
 <body>
-  <button id="getText">Get text</button>
-  <button id="getUsers">Get Users</button>
-  <div id="output">
-
+  <div class="container">
+    <h1 class="display-4 mb-4 mt-4">Fetch API Sandbox</h1>
+    <div class="d-flex">
+      <button class="btn btn-primary mr-4" id="getText">Get text</button>
+      <button class="btn btn-warning mr-4" id="getJson">Get JSON</button>
+      <button class="btn btn-success mr-4" id="getUsers">Get Users</button>
+    </div>
+    <hr>
+    <div id="output"></div>
+    <form id="addPost">
+      <div class="form-group">
+        <input class="form-control" type="text" name="title" id="title" placeholder="Enter title">
+      </div>
+      <div class="form-group">
+        <textarea class="form-control" id="body" placeholder="Enter body..."></textarea>
+      </div>
+      <div class="form-group">
+        <input class="btn btn-secondary" type="submit" value="Submit" id="submit">
+      </div>
+    </form>
   </div>
   <script>
     document.getElementById('getText').addEventListener('click', getText);
     document.getElementById('getUsers').addEventListener('click', getUsers);
+    document.getElementById('getJson').addEventListener('click', getJSON);
+    document.getElementById('addPost').addEventListener('submit', addPost);
 
     function getText() {
       fetch('sample.txt')
@@ -26,6 +46,26 @@
     }
 
     function getUsers() {
+      fetch('https://jsonplaceholder.typicode.com/users')
+        .then(res => res.json())
+        .then(data => {
+          let output = '<h2>Users</h2>';
+          for (const user of data) {
+            output += `
+              <ul>
+                <li>ID: ${user.id}</li>
+                <li>Name: ${user.name}</li>
+                <li>Name: ${user.username}</li>
+                <li>Email: ${user.email}</li>
+              </ul>
+            `;
+          };
+          document.getElementById('output').innerHTML = output;
+        })
+        .catch(err => console.log(err));
+    }
+
+    function getJSON() {
       fetch('users.json')
         .then(res => res.json())
         .then(data => {
@@ -41,6 +81,26 @@
           };
           document.getElementById('output').innerHTML = output;
         })
+        .catch(err => console.log(err));
+    }
+
+    function addPost(e) {
+      e.preventDefault();
+      const title = document.getElementById('title').value;
+      const body = document.getElementById('body').value;
+      fetch('https://jsonplaceholder.typicode.com/posts', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-type': 'application/json'
+          },
+          body: JSON.stringify({
+            title,
+            body
+          })
+        })
+        .then(res => res.json())
+        .then(data => console.log(data))
         .catch(err => console.log(err));
     }
   </script>
