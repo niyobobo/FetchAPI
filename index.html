@@ -6,6 +6,9 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Fetch-API</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="controller.js"></script>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+    integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
@@ -14,13 +17,16 @@
   <div class="container">
     <h1 class="display-4 mb-4 mt-4">Fetch API Sandbox</h1>
     <div class="d-flex">
-      <button class="btn btn-primary mr-4" id="getText">Get text</button>
-      <button class="btn btn-warning mr-4" id="getJson">Get JSON</button>
-      <button class="btn btn-success mr-4" id="getUsers">Get Users</button>
+      <button class="btn btn-primary mr-4" id="getText" onclick="getText()"><i class="fas fa-address-book mr-2"></i>Get
+        text</button>
+      <button class="btn btn-warning mr-4" id="getJson" onclick="getJSON()"><i class="fab fa-jsfiddle mr-2"></i>Get
+        JSON</button>
+      <button class="btn btn-success mr-4" id="getUsers" onclick="getUsers()"><i class="fas fa-user mr-2"></i>Get
+        Users</button>
     </div>
     <hr>
     <div id="output"></div>
-    <form id="addPost">
+    <form id="addPost" onsubmit="addPost(event)">
       <div class="form-group">
         <input class="form-control" type="text" name="title" id="title" placeholder="Enter title">
       </div>
@@ -28,84 +34,11 @@
         <textarea class="form-control" id="body" placeholder="Enter body..."></textarea>
       </div>
       <div class="form-group">
-        <input class="btn btn-secondary" type="submit" value="Submit" id="submit">
+        <input class="btn btn-secondary" type="submit" value="Submit">
       </div>
-    </form>
   </div>
-  <script>
-    document.getElementById('getText').addEventListener('click', getText);
-    document.getElementById('getUsers').addEventListener('click', getUsers);
-    document.getElementById('getJson').addEventListener('click', getJSON);
-    document.getElementById('addPost').addEventListener('submit', addPost);
-
-    function getText() {
-      fetch('sample.txt')
-        .then(res => res.text())
-        .then(data => document.getElementById('output').innerHTML = data)
-        .catch(err => console.log(err));
-    }
-
-    function getUsers() {
-      fetch('https://jsonplaceholder.typicode.com/users')
-        .then(res => res.json())
-        .then(data => {
-          let output = '<h2>Users</h2>';
-          for (const user of data) {
-            output += `
-              <ul class="list-group">
-                <li class="list-group-item">ID: ${user.id}</li>
-                <li class="list-group-item">Name: ${user.name}</li>
-                <li class="list-group-item">Name: ${user.username}</li>
-                <li class="list-group-item">Email: ${user.email}</li>
-              </ul>
-              <br>
-            `;
-          };
-          document.getElementById('output').innerHTML = output;
-        })
-        .catch(err => console.log(err));
-    }
-
-    function getJSON() {
-      fetch('users.json')
-        .then(res => res.json())
-        .then(data => {
-          let output = '<h2>Users</h2>';
-          for (const user of data) {
-            output += `
-              <ul class="list-group">
-                <li class="list-group-item">ID: ${user.id}</li>
-                <li class="list-group-item">Name: ${user.name}</li>
-                <li class="list-group-item">Email: ${user.email}</li>
-              </ul>
-              <br>
-            `;
-          };
-          document.getElementById('output').innerHTML = output;
-        })
-        .catch(err => console.log(err));
-    }
-
-    function addPost(e) {
-      e.preventDefault();
-      const title = document.getElementById('title').value;
-      const body = document.getElementById('body').value;
-      fetch('https://jsonplaceholder.typicode.com/posts', {
-          method: 'POST',
-          headers: {
-            'Accept': 'application/json, text/plain, */*',
-            'Content-type': 'application/json'
-          },
-          body: JSON.stringify({
-            title,
-            body
-          })
-        })
-        .then(res => res.json())
-        .then(data => console.log(data))
-        .catch(err => console.log(err));
-    }
-  </script>
+  </form>
+  </div>
 </body>
 
 </html>
